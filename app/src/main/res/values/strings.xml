@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">covidData</string>
+    <string name="toolbarTitle">Covid Data</string>
+    <string name="licence">Developer info</string>
+    <string name="deathInfo">TextView</string>
+    <string name="positiveInfo">TextView</string>
+    <string name="logoIcon">Logo Icon</string>
+</resources>
