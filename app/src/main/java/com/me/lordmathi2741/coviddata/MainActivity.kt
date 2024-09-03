@@ -16,19 +16,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.me.lordmathi2741.coviddata.adapters.HealthDataAdapter
-import com.me.lordmathi2741.coviddata.factories.HealthDataServiceFactory
-import com.me.lordmathi2741.coviddata.models.HealthData
 import com.me.lordmathi2741.coviddata.receiver.AlarmNotification
 import com.me.lordmathi2741.coviddata.receiver.AlarmNotification.Companion.NOTIFICATION_ID
-import com.me.lordmathi2741.coviddata.service.HealthDataService
-import kotlinx.coroutines.Dispatchers
+import com.me.lordmathi2741.coviddata.support.Configuration
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var service : HealthDataService
     private lateinit var recyclerView : RecyclerView
+    private var instance = Configuration.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -43,36 +39,17 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        setUpRetrofit()
+        instance.setUpRetrofit()
         lifecycleScope.launch {
-            getHealthData()
+            instance.getHealthData()
         }
         lifecycleScope.launch {
-            setUpRecyclerView()
+            instance.setUpRecyclerView(recyclerView)
         }
 
 
 
     }
-
-    private fun setUpRetrofit(){
-        val factory = HealthDataServiceFactory
-        service = factory.createHealthDataServiceInstance()
-    }
-
-    private suspend fun getHealthData() : List<HealthData>{
-        return service.getHealthData()
-    }
-
-
-    private suspend fun setUpRecyclerView(){
-        val healthData = getHealthData()
-        withContext(Dispatchers.Main){
-            recyclerView.adapter = HealthDataAdapter(healthData)
-        }
-    }
-
-
 
 
     private fun setUpNotification() {
